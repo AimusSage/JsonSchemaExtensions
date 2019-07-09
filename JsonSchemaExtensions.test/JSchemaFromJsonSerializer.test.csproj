@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JsonSchemaExtensions\JsonSchemaExtensions.csproj" />
+    <ProjectReference Include="..\JsonSchemaExtensions\JSchemaFromJsonSerializer.csproj" />
   </ItemGroup>
 
 </Project>

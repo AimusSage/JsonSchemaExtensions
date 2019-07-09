@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Schema;
 
-namespace JsonSchemaExtensions.test
+namespace JSchemaFromJsonSerializer.test
 {
     [TestClass]
     public class UnitTest1
@@ -21,7 +21,7 @@ namespace JsonSchemaExtensions.test
                                         ]
                                     }
                                 }";
-            var schemarelizer = new JsonSchemaFromJson();
+            var schemarelizer = new JSchemaFromJsonSerializer();
             var result = schemarelizer.ConvertJsonToSchema(jsonString);
             Assert.AreEqual(jSchema, result);
         }

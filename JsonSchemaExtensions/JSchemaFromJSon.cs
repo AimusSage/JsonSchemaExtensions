@@ -5,9 +5,9 @@ using Newtonsoft.Json.Schema.Generation;
 using System;
 using System.Collections.Generic;
 
-namespace JsonSchemaExtensions
+namespace JSchemaFromJsonSerializer
 {
-    public class JsonSchemaFromJson
+    public class JSchemaFromJsonSerializer
     {
         public JSchema ConvertJsonToSchema(string jsonString)
         {
@@ -16,10 +16,21 @@ namespace JsonSchemaExtensions
             //var generator = new JSchemaGenerator();
             //var jsonReader = json.CreateReader();
 
-            JSchema schema = new JSchema();
-            schema.Id = new Uri($"https://example.com/root.json");
-            schema.Title = "The Root Schema";
-            schema.Type = JSchemaType.Object;
+            JSchema schema = new JSchema
+            {
+                Id = new Uri($"https://example.com/root.json"),
+                Title = "The Root Schema",
+                Type = JSchemaType.Object
+            };
+
+            AddPropertiesToSchema(schema, json);
+
+            Console.WriteLine($"Schema: {schema.ToString()}");
+            return schema;
+        }
+
+        private void AddPropertiesToSchema(JSchema schema, JObject json)
+        {
             foreach (var item in json)
             {
                 schema.Required.Add(item.Key);
@@ -29,16 +40,16 @@ namespace JsonSchemaExtensions
                     Type = GetJSchemaPropertyType(item.Value.Type),
                     Title = $"The {item.Key} Schema"
                 });
+                if (item.Value.Type == JTokenType.Object)
+                {
+                    AddPropertiesToSchema(schema.Properties[item.Key], JObject.Parse(item.Value.ToString()));
+                }
             }
-
-            Console.WriteLine($"Schema: {schema.ToString()}");
-            return schema;
         }
 
         private JSchemaType GetJSchemaPropertyType(JTokenType item)
         {
-            JSchemaType schemaType;
-            if (Enum.TryParse(item.ToString(), out schemaType))
+            if (Enum.TryParse(item.ToString(), out JSchemaType schemaType))
             {
                 if (Enum.IsDefined(typeof(JSchemaType), schemaType))
                 {
